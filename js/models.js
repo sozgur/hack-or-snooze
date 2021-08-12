@@ -147,24 +147,28 @@ class User {
    */
 
   static async signup(username, password, name) {
-    const response = await axios({
-      url: `${BASE_URL}/signup`,
-      method: "POST",
-      data: { user: { username, password, name } },
-    });
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/signup`,
+        method: "POST",
+        data: { user: { username, password, name } },
+      });
 
-    let { user } = response.data;
+      let { user } = response.data;
 
-    return new User(
-      {
-        username: user.username,
-        name: user.name,
-        createdAt: user.createdAt,
-        favorites: user.favorites,
-        ownStories: user.stories,
-      },
-      response.data.token
-    );
+      return new User(
+        {
+          username: user.username,
+          name: user.name,
+          createdAt: user.createdAt,
+          favorites: user.favorites,
+          ownStories: user.stories,
+        },
+        response.data.token
+      );
+    } catch (error) {
+      return error.response.data.error.message;
+    }
   }
 
   /** Login in user with API, make User instance & return it.
@@ -224,11 +228,13 @@ class User {
     }
   }
 
+  // Add story to user's favorite list, and add data using API
   async addFavorite(story) {
     this.favorites.push(story);
     await this._addOrRemoveStory(story, "add");
   }
 
+  // Remove story from user's favorite list, and remove data from API
   async removeFavorite(story) {
     this.favorites = this.favorites.filter((s) => s.storyId !== story.storyId);
     await this._addOrRemoveStory(story, "remove");
@@ -244,6 +250,7 @@ class User {
     });
   }
 
+  // Check story if it aldready in user's favorite list
   isFavorite(story) {
     return this.favorites.some((favSt) => {
       return favSt.storyId === story.storyId;

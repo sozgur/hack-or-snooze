@@ -41,12 +41,17 @@ async function signup(evt) {
 
   // User.signup retrieves user info from API and returns User instance
   // which we'll make the globally-available, logged-in user.
-  currentUser = await User.signup(username, password, name);
 
-  saveUserCredentialsInLocalStorage();
-  updateUIOnUserLogin();
+  let data = await User.signup(username, password, name);
 
-  $signupForm.trigger("reset");
+  if (data instanceof User) {
+    currentUser = data;
+    saveUserCredentialsInLocalStorage();
+    updateUIOnUserLogin();
+    $signupForm.trigger("reset");
+  } else {
+    $signupAlert.text(data).show();
+  }
 }
 
 $signupForm.on("submit", signup);
