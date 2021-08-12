@@ -136,17 +136,13 @@ async function toggleFavorite(evt) {
     $(evt.target).removeClass("fas");
     $(evt.target).addClass("far");
   }
-
-  putFavoriteStoriesOnPage();
 }
 
 $storiesLists.on("click", ".star", toggleFavorite);
 
 async function deleteStory(evt) {
   const storyId = evt.target.closest("li").id;
-  const story = await storyList.getStory(storyId);
-  console.debug(storyId);
-  await storyList.removeStory(currentUser, story);
+  await storyList.removeStory(currentUser, storyId);
   putMyStoriesOnPage();
   console.debug("deleteStory");
 }

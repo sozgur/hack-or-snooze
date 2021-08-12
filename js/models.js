@@ -88,7 +88,7 @@ class StoryList {
   }
 
   // Remove story from API and update user's favorite and own stories data
-  async removeStory(user, story) {
+  async removeStory(user, storyId) {
     const token = user.loginToken;
     const response = await axios({
       url: `${BASE_URL}/stories/${story.storyId}`,
@@ -96,7 +96,7 @@ class StoryList {
       data: { token },
     });
 
-    user.favorites = user.favorites.filter((s) => s.storyId !== story.storyId);
+    user.favorites = user.favorites.filter((s) => s.storyId !== storyId);
     user.ownStories = user.ownStories.filter(
       (s) => s.storyId !== story.storyId
     );
