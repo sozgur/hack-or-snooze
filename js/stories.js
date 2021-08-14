@@ -135,6 +135,7 @@ async function toggleFavorite(evt) {
     await currentUser.removeFavorite(story);
     $(evt.target).removeClass("fas");
     $(evt.target).addClass("far");
+    putFavoriteStoriesOnPage();
   }
 }
 
